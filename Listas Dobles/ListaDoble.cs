@@ -221,32 +221,24 @@ namespace Listas_Dobles
 
         public static void MergeSorted(DoubleList listA, DoubleList listB, SortDirection direction)
         {
-            try
+            if (listA == null || listB == null)
             {
-                if (listA == null || listB == null)
-                {
-                    throw new ArgumentNullException("List cannot be null.");
-                }
-                Node currentB = listB.head;
-                while (currentB != null)
-                {
-                    listA.InsertInOrder(currentB.Value);
-                    currentB = currentB.Next;
-                }
-                if (direction == SortDirection.Descending)
-                {
-                    listA.Invert();
-                }
+                throw new ArgumentNullException("List cannot be null.");
             }
-            catch (ArgumentNullException ex)
+
+            Node currentB = listB.head;
+            while (currentB != null)
             {
-                Console.WriteLine($"ArgumentNullException: {ex.Message}");
+                listA.InsertInOrder(currentB.Value);
+                currentB = currentB.Next;
             }
-            catch (Exception ex)
+
+            if (direction == SortDirection.Descending)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                listA.Invert();
             }
         }
+
 
 
         public void Invert()
