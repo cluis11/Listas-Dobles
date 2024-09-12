@@ -31,7 +31,7 @@ namespace Listas_Dobles
         int GetMiddle();
 
         // Combina dos listas ordenadas (listA y listB) en la lista actual en el orden especificado por direction.
-        void MergeSorted(IList listA, IList listB, SortDirection direction);
+        void MergeSorted(IList listB, SortDirection direction);
     }
 
 }

@@ -22,15 +22,16 @@ namespace Listas_Dobles
     }
 
 
-    public class DoubleLinkedList : IList
+    public class DoubleList : IList
     {
         private Node head;
         private Node middle;
         private int size;
 
-        public DoubleLinkedList()
+        public DoubleList()
         {
             head = null;
+            middle = null;
             size = 0;
         }
 
@@ -65,13 +66,14 @@ namespace Listas_Dobles
                     current.Next = newNode;
                     newNode.Prev = current;
                 }
-                if (size % 2 == 0)
-                {
-                    middle = middle.Next;
-                }
             }
-
             size++;
+            middle = head;
+            for (int i = 0; i < (size / 2); i++) 
+            {
+                middle = middle.Next;
+            }
+            
         }
 
         public void Insert(int value)
@@ -91,61 +93,86 @@ namespace Listas_Dobles
                 }
                 current.Next = newNode;
                 newNode.Prev = current;
-                if (size % 2 == 0) 
-                {
-                    middle = middle.Next;
-                }
             }
             size++;
+            if (size % 2 == 0)
+            {
+                middle = middle.Next;
+            }
         }
 
 
         public int DeleteFirst()
         {
-            if (head == null)
-                throw new InvalidOperationException("List is empty.");
-
-            int value = head.Value;
-            head = head.Next;
-
-            if (head != null)
-                head.Prev = null;
-
-            // Actualizar el nodo central
-            if (size % 2 == 1)
+            try
             {
-                middle = middle.Next;
+                if (head == null)
+                {
+                    throw new InvalidOperationException("List is empty.");
+                }
+                int value = head.Value;  
+                head = head.Next;  
+                if (head != null)
+                {
+                    head.Prev = null;
+                }
+                if (size % 2 == 1)
+                {
+                    middle = middle.Next;
+                }
+                size--;  
+                return value;  
             }
-
-            size--;
-            return value;
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine(ex.Message);  
+                return -1;  
+            }
         }
+
 
         public int DeleteLast()
         {
-            if (head == null)
-                throw new InvalidOperationException("List is empty.");
-            Node current = head;
-            while (current.Next != null)
+            try
             {
-                current = current.Next;
+                if (head == null)
+                {
+                    throw new InvalidOperationException("List is empty.");
+                }
+
+                Node current = head;
+
+                while (current.Next != null)
+                {
+                    current = current.Next;
+                }
+
+                int value = current.Value;  
+
+                if (current.Prev != null)
+                {
+                    current.Prev.Next = null;
+                }
+                else
+                {
+                    head = null;  
+                }
+
+                if (size % 2 == 0)
+                {
+                    middle = middle.Prev;
+                }
+
+                size--;  
+                return value;  
             }
-            int value = current.Value;
-            if (current.Prev != null)
+            catch (InvalidOperationException ex)
             {
-                current.Prev.Next = null;
+                Console.WriteLine(ex.Message);  
+                return -1;  
             }
-            else
-            {
-                head = null;
-            }
-            if (size % 2 == 0)
-            {
-                middle = middle.Prev;
-            }
-            size--;
-            return value;
         }
+
 
         public bool DeleteValue(int value)
         {
@@ -188,9 +215,114 @@ namespace Listas_Dobles
             return middle.Value;
         }
 
-        public void MergeSorted(IList listA, IList listB, SortDirection direction)
+        public void MergeSorted(IList listB, SortDirection direction)
         {
         }
+
+        public static void MergeSorted(DoubleList listA, DoubleList listB, SortDirection direction)
+        {
+            try
+            {
+                if (listA == null || listB == null)
+                {
+                    throw new ArgumentNullException("List cannot be null.");
+                }
+                Node currentB = listB.head;
+                while (currentB != null)
+                {
+                    listA.InsertInOrder(currentB.Value);
+                    currentB = currentB.Next;
+                }
+                if (direction == SortDirection.Descending)
+                {
+                    listA.Invert();
+                }
+            }
+            catch (ArgumentNullException ex)
+            {
+                Console.WriteLine($"ArgumentNullException: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
+
+
+        public void Invert()
+        {
+            try
+            {
+                if (head == null)
+                {
+                    throw new InvalidOperationException("List is empty.");
+                }
+                Node current = head;
+                Node temp = null;
+                while (current != null)
+                {
+                    temp = current.Prev;
+                    current.Prev = current.Next;
+                    current.Next = temp;
+                    current = current.Prev;
+                }
+                if (temp != null)
+                {
+                    head = temp.Prev;
+                }
+                if (size % 2 == 0)
+                {
+                    middle = middle.Next;
+                }
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine(ex.Message); 
+            }
+        }
+
+
+        public static DoubleList Invert(DoubleList list)
+        {
+            try
+            {
+                if (list == null)
+                {
+                    throw new ArgumentNullException(nameof(list), "The list parameter cannot be null.");
+                }
+
+                list.Invert();
+                return list;
+            }
+            catch (ArgumentNullException ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine(ex.Message);
+                return new DoubleList();
+            }
+        }
+
+
+        public void PrintList() 
+        {
+            if (head == null)
+                throw new InvalidOperationException("List is empty.");
+            else 
+            {
+                Node current = head;
+                while (current != null)
+                {
+                    Console.WriteLine(current.Value);
+                    current = current.Next;
+                }
+            }
+        }
+
+
     }
 
 }
