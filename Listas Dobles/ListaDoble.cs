@@ -210,7 +210,7 @@ namespace Listas_Dobles
         public int GetMiddle()
         {
             if (middle == null)
-                throw new InvalidOperationException("List is empty.");
+                throw new NullReferenceException("List is empty.");
 
             return middle.Value;
         }
@@ -243,60 +243,47 @@ namespace Listas_Dobles
 
         public void Invert()
         {
-            try
+            if (this == null) 
             {
-                if (head == null)
-                {
-                    throw new InvalidOperationException("List is empty.");
-                }
-                Node current = head;
-                Node temp = null;
-                while (current != null)
-                {
-                    temp = current.Prev;
-                    current.Prev = current.Next;
-                    current.Next = temp;
-                    current = current.Prev;
-                }
-                if (temp != null)
-                {
-                    head = temp.Prev;
-                }
-                if (size % 2 == 0)
-                {
-                    middle = middle.Next;
-                }
+                throw new ArgumentNullException("The list parameter cannot be null.");
             }
-            catch (InvalidOperationException ex)
+            if (head == null)
             {
-                Console.WriteLine(ex.Message); 
+                throw new InvalidOperationException("List is empty.");
+            }
+            Node current = head;
+            Node temp = null;
+            while (current != null)
+            {
+                temp = current.Prev;
+                current.Prev = current.Next;
+                current.Next = temp;
+                current = current.Prev;
+            }
+            if (temp != null)
+            {
+                head = temp.Prev;
+            }
+            if (size % 2 == 0)
+            {
+                middle = middle.Next;
             }
         }
+
+
+
 
 
         public static DoubleList Invert(DoubleList list)
         {
-            try
+            if (list == null)
             {
-                if (list == null)
-                {
-                    throw new ArgumentNullException(nameof(list), "The list parameter cannot be null.");
-                }
-
-                list.Invert();
-                return list;
+                throw new ArgumentNullException(nameof(list), "The list parameter cannot be null.");
             }
-            catch (ArgumentNullException ex)
-            {
-                Console.WriteLine(ex.Message);
-                return null;
-            }
-            catch (InvalidOperationException ex)
-            {
-                Console.WriteLine(ex.Message);
-                return new DoubleList();
-            }
+            list.Invert();
+            return list;
         }
+
 
 
         public void PrintList() 
